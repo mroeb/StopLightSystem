@@ -28,33 +28,9 @@ constexpr bool checkIfContains(const Phase currentPhase, const Phase phase) {
 void StopLight::showCurrent() {
 
     using namespace std::chrono_literals;
-    while (true) {
-        std::this_thread::sleep_for(1s);
-        m_Gpio.write(17, true);
-        std::this_thread::sleep_for(1s);
-        m_Gpio.write(17, false);
-
-        std::this_thread::sleep_for(1s);
-        m_Gpio.write(27, true);
-        std::this_thread::sleep_for(1s);
-        m_Gpio.write(27, false);
-
-        std::this_thread::sleep_for(1s);
-        m_Gpio.write(22, true);
-        std::this_thread::sleep_for(1s);
-        m_Gpio.write(22, false);
-
-
-
-    }
-
-    if (checkIfContains(m_CurrentPhase, Phase::Stop))
-        if (m_PinColorMap.contains(Phase::Stop));
-
-
-    if (checkIfContains(m_CurrentPhase, Phase::PrepareGo));
-    if (checkIfContains(m_CurrentPhase, Phase::PrepareStop));
-    if (checkIfContains(m_CurrentPhase, Phase::Go));
+    m_Gpio.write<17>(true);
+    m_Gpio.write<22>(true);
+    m_Gpio.write<27>(true);
 
 }
 
