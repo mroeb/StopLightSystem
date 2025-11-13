@@ -85,6 +85,21 @@ namespace Pilo
             ioctl(line_handles.OutputHandles.at(Line), GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
         }
 
+        void write(unsigned int line, bool value) {
+
+            if (chip_fd < 0)
+            {
+                return;
+            }
+            if (not line_handles.OutputHandles.contains(line))
+            {
+                throw std::runtime_error(std::format("Failed to write to Line: {}. The Line is not Registered", line));
+            }
+            gpiohandle_data data{};
+            data.values[0] = value ? 1 : 0;
+            ioctl(line_handles.OutputHandles.at(line), GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data);
+        }
+
         template<unsigned int Line>
         [[nodiscard]] bool read() const
         {
@@ -98,6 +113,21 @@ namespace Pilo
             }
             gpiohandle_data data{};
             ioctl(line_handles.InputHandles.at(Line), GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
+            return data.values[0];
+        }
+
+        [[nodiscard]]
+        bool read(unsigned int line) {
+            if (chip_fd < 0)
+            {
+                return false;
+            }
+            if (not line_handles.InputHandles.contains(line))
+            {
+                throw std::runtime_error(std::format("Failed to read Line: {}. The Line is not Registered", line));
+            }
+            gpiohandle_data data{};
+            ioctl(line_handles.InputHandles.at(line), GPIOHANDLE_GET_LINE_VALUES_IOCTL, &data);
             return data.values[0];
         }
 

@@ -3,6 +3,9 @@
 //
 
 #include "StopLight.hpp"
+
+#include <bits/this_thread_sleep.h>
+
 #include "Pilo.hpp"
 
 StopLight::StopLight() : m_Gpio("/dev/gpiochip0", "StioLightSystem") {
@@ -24,9 +27,18 @@ constexpr bool checkIfContains(const Phase currentPhase, const Phase phase) {
 }
 void StopLight::showCurrent() {
 
-    m_Gpio.write<17>(true);
+    using namespace std::chrono_literals;
+    while (true) {
+        std::this_thread::sleep_for(1s);
+        m_Gpio.write(17, true);
+        std::this_thread::sleep_for(1s);
+        m_Gpio.write(17, false);
 
-    if (checkIfContains(m_CurrentPhase, Phase::Stop));
+    }
+
+    if (checkIfContains(m_CurrentPhase, Phase::Stop))
+        if (m_PinColorMap.contains(Phase::Stop));
+
 
     if (checkIfContains(m_CurrentPhase, Phase::PrepareGo));
     if (checkIfContains(m_CurrentPhase, Phase::PrepareStop));
