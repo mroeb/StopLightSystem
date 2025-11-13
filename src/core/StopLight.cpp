@@ -28,9 +28,17 @@ constexpr bool checkIfContains(const Phase currentPhase, const Phase phase) {
 void StopLight::showCurrent() {
 
     using namespace std::chrono_literals;
-    m_Gpio.write<17>(true);
-    m_Gpio.write<22>(true);
-    m_Gpio.write<27>(true);
+    while (true) {
+        m_Gpio.write<17>(true);
+        m_Gpio.write<22>(true);
+        m_Gpio.write<27>(true);
+
+        std::this_thread::sleep_for(1s);
+
+        m_Gpio.write<17>(false);
+        m_Gpio.write<22>(false);
+        m_Gpio.write<27>(false);
+    }
 
 }
 
