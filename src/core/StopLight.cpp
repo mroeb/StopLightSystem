@@ -38,6 +38,8 @@ void StopLight::showCurrent() {
         m_Gpio.write<17>(false);
         m_Gpio.write<22>(false);
         m_Gpio.write<27>(false);
+
+        std::this_thread::sleep_for(1s);
     }
 
 }
