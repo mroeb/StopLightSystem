@@ -9,7 +9,7 @@
 #include "Pilo.hpp"
 
 StopLight::StopLight() : m_Gpio("/dev/gpiochip0", "StioLightSystem") {
-    m_Gpio.add_lines<Pilo::Direction::Output, 17>();
+    m_Gpio.add_lines<Pilo::Direction::Output, 17, 27, 22>();
 }
 
 
@@ -33,6 +33,18 @@ void StopLight::showCurrent() {
         m_Gpio.write(17, true);
         std::this_thread::sleep_for(1s);
         m_Gpio.write(17, false);
+
+        std::this_thread::sleep_for(1s);
+        m_Gpio.write(27, true);
+        std::this_thread::sleep_for(1s);
+        m_Gpio.write(27, false);
+
+        std::this_thread::sleep_for(1s);
+        m_Gpio.write(22, true);
+        std::this_thread::sleep_for(1s);
+        m_Gpio.write(22, false);
+
+
 
     }
 
