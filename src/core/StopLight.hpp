@@ -61,7 +61,7 @@ private:
 
     Phase m_CurrentPhase{};
 
-    Pilo::GPIO<"gpiochip0", "StopLightSystem"> m_Gpio{};
+    Pilo::GPIO m_Gpio;
 
 };
 

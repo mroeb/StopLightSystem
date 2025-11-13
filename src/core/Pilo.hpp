@@ -24,29 +24,9 @@ namespace Pilo
 {
     enum class Direction : uint8_t
     {
-        None = 0,
-        Input = 1 << 0,
-        Output = 1 << 1,
-        Both = Input | Output
+        Input,
+        Output
     };
-
-    constexpr Direction operator|(Direction lhs, Direction rhs)
-    {
-        using T = std::underlying_type_t<Direction>;
-        return static_cast<Direction>(static_cast<T>(lhs) | static_cast<T>(rhs));
-    }
-
-    constexpr Direction operator&(Direction lhs, Direction rhs)
-    {
-        using T = std::underlying_type_t<Direction>;
-        return static_cast<Direction>(static_cast<T>(lhs) & static_cast<T>(rhs));
-    }
-
-    constexpr Direction &operator |=(Direction &lhs, const Direction rhs)
-    {
-        lhs = lhs | rhs;
-        return lhs;
-    }
 
     struct LineHandles
     {
@@ -55,27 +35,15 @@ namespace Pilo
         HandleMap OutputHandles{};
     };
 
-    template<typename CharT, std::size_t N>
-    struct fixed_string
-    {
-        CharT data[N]{};
-
-        constexpr fixed_string(const CharT (&str)[N])
-        {
-            std::copy_n(str, N, data);
-        }
-    };
-
-    template<fixed_string chip_name, fixed_string label>
     class GPIO
     {
     public:
-        GPIO()
+        GPIO(const std::string& chip_name, const std::string& name): name(name)
         {
-            chip_fd = open(chip_name.data, O_RDWR);
+            chip_fd = open(chip_name.c_str(), O_RDWR);
             if (chip_fd < 0)
             {
-                throw std::runtime_error(std::format("Failed to open the chip: {}", chip_name.data));
+                throw std::runtime_error(std::format("Failed to open the chip: {}", chip_name.c_str()));
             }
         }
 
@@ -136,16 +104,17 @@ namespace Pilo
     private:
         int chip_fd{-1};
         LineHandles line_handles;
+        std::string name{};
 
         template<Direction direction>
         void add_handle(const unsigned int line)
         {
-            if constexpr ((direction & Direction::Input) == Direction::Input)
+            if constexpr (direction == Direction::Input)
             {
                 line_handles.InputHandles[line] = request_handle(line, GPIOHANDLE_REQUEST_INPUT);
             }
 
-            if constexpr ((direction & Direction::Output) == Direction::Output)
+            if constexpr (direction == Direction::Output)
             {
                 line_handles.OutputHandles[line] = request_handle(line, GPIOHANDLE_REQUEST_OUTPUT);
             }

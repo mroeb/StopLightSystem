@@ -5,11 +5,8 @@
 #include "StopLight.hpp"
 #include "Pilo.hpp"
 
-StopLight::StopLight() {
-
+StopLight::StopLight() : m_Gpio("gpiochip0", "StioLightSystem") {
     m_Gpio.add_lines<Pilo::Direction::Input, 17>();
-
-
 }
 
 
