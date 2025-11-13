@@ -109,12 +109,12 @@ namespace Pilo
         template<Direction direction>
         void add_handle(const unsigned int line)
         {
-            if constexpr (direction == Direction::Input)
+            if constexpr (static_cast<int>(direction) == 0)
             {
                 line_handles.InputHandles[line] = request_handle(line, GPIOHANDLE_REQUEST_INPUT);
             }
 
-            if constexpr (direction == Direction::Output)
+            if constexpr (static_cast<int>(direction) == 1)
             {
                 line_handles.OutputHandles[line] = request_handle(line, GPIOHANDLE_REQUEST_OUTPUT);
             }
