@@ -126,7 +126,7 @@ namespace Pilo
             req.lineoffsets[0] = line;
             req.flags = flag;
             req.lines = 1;
-            std::strncpy(req.consumer_label, label.data, sizeof(req.consumer_label) - 1);
+            std::strncpy(req.consumer_label, name.c_str(), sizeof(req.consumer_label) - 1);
             req.consumer_label[sizeof(req.consumer_label) - 1] = '\0';
             if (ioctl(chip_fd, GPIO_GET_LINEHANDLE_IOCTL, &req) < 0)
             {
