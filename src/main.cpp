@@ -8,26 +8,13 @@
 #include <algorithm>
 #include <memory>
 #include <format>
-#include "pilo.hpp" // Including the real Pilo::GPIO library
+#include "Pilo.hpp"
 
-// ====================================================================
-// Traffic Light Application Logic (C++ OOP) - HARDWARE READY
-// ====================================================================
-
-// Utility for pausing the execution
 void wait_ms(int ms)
 {
-    // Note: The real hardware application will use longer, more realistic timing.
-    // The simulation used short times (400ms) for quick console output.
-    // We will use 1000ms here as a minimum for real hardware testing.
     std::this_thread::sleep_for(std::chrono::milliseconds(ms));
 }
 
-// --- 1. The Light Abstraction ---
-
-/**
- * @brief Represents a single colored LED in the system.
- */
 class Light
 {
 private:
@@ -36,13 +23,10 @@ private:
     std::string color_;
 
 public:
-    // Expose line_number_ for CarTrafficLight's state check
-    const unsigned int line_number_;
 
     Light(Pilo::GPIO& chip, unsigned int line, std::string color)
         : gpio_chip_(chip), line_number_(line), color_(std::move(color))
     {
-        // Add as an Output line. Initial state is LOW (off).
         gpio_chip_.add_lines(Pilo::Direction::Output, {line_number_}, Pilo::InitialValue::Low);
     }
 
